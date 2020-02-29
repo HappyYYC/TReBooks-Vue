@@ -11,7 +11,7 @@
           </Select>
         </FormItem>
         <div style="margin: 10px 0 20px 0">
-          <Button type="default" icon="md-folder" @click="clickSelectFiles">Select Files</Button>
+          <Button type="default" icon="md-folder" to="/folder">Select Files</Button>
         </div>
         <div style="margin: 10px 60px 20px 0;text-align: right">
           <Button type="primary" icon="md-book" @click="conveySelectedFiles">Convey</Button>
