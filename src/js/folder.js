@@ -1,4 +1,5 @@
-import expandRow from '@/components/ExpandRow'
+// import expandRow from '@/components/ExpandRow'
+const expandRow = () => import('@/components/ExpandRow')
 export default {
   name: 'Folder',
   data () {
@@ -27,6 +28,7 @@ export default {
       currentFolder: 'D:/',
       filesList: [],
       driversList: [],
+      tagsList: [],
       filesTableColumns: [
         {
           type: 'selection',
@@ -176,7 +178,9 @@ export default {
       filesTablePageSize: 10,
       filesTablePageCurrent: 1,
       filesTableDataCount: 0,
-      selectedList: []
+      selectedList: [],
+      selectedTagsList: [],
+      addCategoriesSelectedRow: 0
     }
   },
   methods: {
@@ -267,9 +271,35 @@ export default {
       //   'CMDCode': 20
       // }
       // this.$parent.webSocketSend(JSON.stringify(actions))
-      console.log('/folder refreshDisk this.$parent.driversListProps', this.$parent.driversListProps)
+      // console.log('/folder refreshDisk this.$parent.driversListProps', this.$parent.driversListProps)
       if (this.$parent.driversListProps != null) {
         this.handleListDriverResponse(this.$parent.driversListProps)
+      } else {
+        let actions = {
+          'CMD': 'listDriverRequest',
+          'CMDCode': 20
+        }
+        this.$parent.webSocketSend(JSON.stringify(actions))
+      }
+    },
+    addTag (index) {
+      if (this.selectedTagsList.indexOf(this.tagsList[index]) === -1) {
+        this.selectedTagsList.push(this.tagsList[index])
+      }
+    },
+    getTags () {
+      if (this.$parent.tagsListProps != null) {
+        // this.handleListTagsResponse(this.$parent.driversListProps)
+        this.tagsList = this.$parent.tagsListProps['tagsList']
+      } else {
+        this.$parent.getDefaultTagsData()
+      }
+    },
+    getDefaultDir () {
+      if (this.$parent.dirListProps != null) {
+        this.handleListDirResponse(this.$parent.dirListProps)
+      } else {
+        this.$parent.getDefaultDirData()
       }
     },
     localDiskChange () {
@@ -302,12 +332,34 @@ export default {
       window.localStorage.setItem('addedFiles', JSON.stringify(this.selectedList))
       this.$router.push({path: '/trans'})
     },
-    addCategories () {
-      this.$Message.warning('Category cannot work yet')
+    addCategories (index) {
       this.addCategoriesDialog = true
+      this.addCategoriesSelectedRow = index
     },
     addCategoriesDialogOK () {
-      this.$Message.info('This is addCategoriesDialogOK')
+      this.selectedList = this.$refs.selectFiles.getSelection()
+      let actions = {
+        'CMD': 'mvFilesRequest',
+        'CMDCode': 40,
+        'mvFilesList': []
+      }
+      // let tempStr
+      if (this.selectedList.length !== 0) {
+        for (let i in this.selectedList) {
+          let tempFile = {
+            'prePath': this.transTableDataShow[i]['location'],
+            'newPath': ''
+          }
+          actions['mvFilesList'].push(tempFile)
+        }
+      } else {
+        let tempFile = {
+          'prePath': this.transTableDataShow[this.addCategoriesSelectedRow]['location'],
+          'newPath': ''
+        }
+        actions['mvFilesList'].push(tempFile)
+      }
+      this.$parent.webSocketSend(JSON.stringify(actions))
     },
     currentFolderChange (data) {
       this.folderList = []
@@ -447,12 +499,15 @@ export default {
       // }
       // this.localDiskChange()
     }
+    // handleListTagsResponse (jsonData) {
+    //
+    // }
   },
-  props: ['driversListProps', 'dirListProps'],
+  props: ['driversListProps', 'dirListProps', 'tagsListProps'],
   watch: {
     dirListProps: {
       handler (newVal, oldVal) {
-        console.log('/folder watch dirProps', newVal)
+        // console.log('/folder watch dirProps', newVal)
         this.handleListDirResponse(newVal)
       },
       // immediate: true,
@@ -460,8 +515,16 @@ export default {
     },
     driversListProps: {
       handler (newVal, oldVal) {
-        console.log('/folder watch driversProps', newVal)
+        // console.log('/folder watch driversProps', newVal)
         this.handleListDriverResponse(newVal)
+      },
+      // immediate: true,
+      deep: true
+    },
+    tagsListProps: {
+      handler (newVal, oldVal) {
+        // console.log('/folder watch driversProps', newVal)
+        this.tagsList = newVal['tagsList']
       },
       // immediate: true,
       deep: true
@@ -472,6 +535,8 @@ export default {
     // this.handlePageChange()
     // this.handleListDriverResponse(this.driversListProps)
     this.refreshDisk()
+    this.getDefaultDir()
+    this.getTags()
   },
   created () {
     // this.initWebSocket()

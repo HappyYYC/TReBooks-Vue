@@ -1,4 +1,5 @@
-import expandRowTrans from '@/components/ExpandRowTrans'
+// import expandRowTrans from '@/components/ExpandRowTrans'
+const expandRowTrans = () => import('@/components/ExpandRowTrans')
 export default {
   name: 'Transfer',
   data () {
@@ -238,6 +239,12 @@ export default {
       // this.$parent.webSocketSend(JSON.stringify(actions))
       if (this.$parent.driversListProps != null) {
         this.handleListDriverResponse(this.$parent.driversListProps)
+      } else {
+        let actions = {
+          'CMD': 'listDriverRequest',
+          'CMDCode': 20
+        }
+        this.$parent.webSocketSend(JSON.stringify(actions))
       }
     },
     conveySelectedFiles () {
@@ -264,13 +271,18 @@ export default {
           'destPath': this.kindleVolume + '/document/' + tempStr + '/' + this.selectedList[i]['itemName']
         }
         actions['cpFilesList'].push(tempFile)
+        for (let j in this.transTableDataShow) {
+          if (this.selectedList[i]['location'] === this.transTableDataShow[j]['location']) {
+            this.transTableDataShow.splice(j, 1)
+          }
+        }
       }
-      console.log(actions)
+      // console.log(actions)
       // this.webSocketSend(JSON.stringify(actions))
       this.$parent.webSocketSend(JSON.stringify(actions))
     },
     handleListDriverResponse (jsonData) {
-      console.log('/trans handleListDriverResponse', jsonData)
+      // console.log('/trans handleListDriverResponse', jsonData)
       this.driversList = JSON.parse(JSON.stringify(jsonData['driversList']))
       // window.localStorage.setItem('isGetDriversInfo', true)
       // console.log(this.driversList)
@@ -337,7 +349,7 @@ export default {
     driversListProps: {
       handler (newVal, oldVal) {
         this.$nextTick(() => {
-          console.log('/trans watch driversProps', newVal)
+          // console.log('/trans watch driversProps', newVal)
           this.handleListDriverResponse(newVal)
         })
       },

@@ -1,7 +1,11 @@
-import Transfer from '@/views/Transfer'
-import Folder_ from '@/views/Folder'
-import Record from '@/views/Record'
-import HelloWorld from '@/components/HelloWorld'
+// import Transfer from '@/views/Transfer'
+// import Folder_ from '@/views/Folder'
+// import Record from '@/views/Record'
+// import HelloWorld from '@/components/HelloWorld'
+const Transfer = () => import('@/views/Transfer')
+const Folder_ = () => import('@/views/Folder')
+const Record = () => import('@/views/Record')
+const HelloWorld = () => import('@/components/HelloWorld')
 export default {
   name: 'App',
   data () {
@@ -9,7 +13,8 @@ export default {
       webSocket: null,
       webSocketErrorCount: 0,
       driversListProps: null,
-      dirListProps: null
+      dirListProps: null,
+      tagsListProps: null
     }
   },
   components: {
@@ -39,6 +44,11 @@ export default {
         'CMDCode': 30
       }
       this.webSocketSend(JSON.stringify(actions))
+      actions = {
+        'CMD': 'listDefaultTagsRequest',
+        'CMDCode': 80
+      }
+      this.webSocketSend(JSON.stringify(actions))
     },
     webSocketOnError (e) {
       this.webSocketErrorCount++
@@ -52,7 +62,7 @@ export default {
       try {
         // var jsonMessage = JSON.parse(JSON.stringify(e.data))
         let jsonMessage = JSON.parse(e.data)
-        console.log('/app jsonMessage', jsonMessage)
+        // console.log('/app jsonMessage', jsonMessage)
         this.cmdData(jsonMessage)
       } catch (e) {
         console.log(e)
@@ -80,17 +90,29 @@ export default {
       }
       this.webSocketSend(JSON.stringify(actions))
     },
+    getDefaultTagsData () {
+      let actions = {
+        'CMD': 'listDefaultTagsRequest',
+        'CMDCode': 80
+      }
+      this.webSocketSend(JSON.stringify(actions))
+    },
     cmdData (jsonData) {
       // console.log('this.$refs', this.$refs)
       if (jsonData['CMD'] === 'listDirResponse') {
         // this.$refs.folder.handleListDirResponse(jsonData)
-        console.log('/app listDirResponse', jsonData)
+        // console.log('/app listDirResponse', jsonData)
         this.dirListProps = jsonData
       } else if (jsonData['CMD'] === 'listDriverResponse') {
         // this.$refs.folder.handleListDriverResponse(jsonData)
         // this.$refs.transfer.handleListDriverResponse(jsonData)
-        console.log('/app listDriverResponse', jsonData)
+        // console.log('/app listDriverResponse', jsonData)
         this.driversListProps = jsonData
+      } else if (jsonData['CMD'] === 'listTagsResponse') {
+        // this.$refs.folder.handleListDriverResponse(jsonData)
+        // this.$refs.transfer.handleListDriverResponse(jsonData)
+        // console.log('/app listDriverResponse', jsonData)
+        this.tagsListProps = jsonData
       }
     }
   },

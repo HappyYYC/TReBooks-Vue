@@ -1,6 +1,6 @@
-# Transmitting and Recording eBooks
+# Transferring and Recording eBooks
 
-> Transmitting eBooks to kindle and Recording
+> Transferring eBooks to kindle and Recording
 
 ## Build Setup
 

@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import Transfer from '@/views/Transfer'
-import Folder from '@/views/Folder'
-import Record from '@/views/Record'
+// import HelloWorld from '@/components/HelloWorld'
+// import Transfer from '@/views/Transfer'
+// import Folder from '@/views/Folder'
+// import Record from '@/views/Record'
+const Transfer = () => import('@/views/Transfer')
+const Folder = () => import('@/views/Folder')
+const Record = () => import('@/views/Record')
+const HelloWorld = () => import('@/components/HelloWorld')
 
 Vue.use(Router)
 

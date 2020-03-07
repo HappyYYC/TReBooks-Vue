@@ -73,10 +73,29 @@
         </p>
         <div>
           <Row>
-            <Col span="12">
-            </Col>
-            <Col span="12">
-            </Col>
+            <Card style="width:350px">
+              <p slot="title">
+                <Icon type="ios-film-outline"></Icon>
+                Selected Categories
+              </p>
+              <a href="#" slot="extra" @click.prevent="selectedTagsList = []">
+                <Icon type="ios-loop-strong"></Icon>
+                Clear
+              </a>
+              <ul>
+                <li :key="index" :value="item" v-for="(item, index) in selectedTagsList">
+                  <span>
+                    <Icon type="ios-star" />
+                    {{ item }}
+                  </span>
+                </li>
+              </ul>
+            </Card>
+          </Row>
+          <Row>
+            <span :key="index" :value="item" v-for="(item, index) in tagsList" @click="addTag(index)">
+              <Icon />{{ item }}
+            </span>
           </Row>
         </div>
       </Modal>
