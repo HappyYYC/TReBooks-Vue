@@ -1,4 +1,4 @@
-# transmitting_and_recording_ebooks
+# Transmitting and Recording eBooks
 
 > Transmitting eBooks to kindle and Recording
 

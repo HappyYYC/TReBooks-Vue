@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
-import Transmit from '@/views/Transmit'
+import Transfer from '@/views/Transfer'
 import Folder from '@/views/Folder'
 import Record from '@/views/Record'
 
@@ -17,8 +17,8 @@ export default new Router({
     },
     {
       path: '/trans',
-      name: 'Transmit',
-      component: Transmit,
+      name: 'Transfer',
+      component: Transfer,
       meta: {title: 'TReBooks'}
     },
     {

@@ -1,45 +1,65 @@
 <template>
   <div>
     <h1></h1>
+<!--    <div class="folder-breadcrumb" style="margin-top: 10px">-->
+<!--      <Row>-->
+<!--        <Col span="8" style="text-align: left;margin-left: 20px">-->
+<!--          <span style="font-size: 20px">Select your local disk:&nbsp;&nbsp;</span>-->
+<!--          <Select v-model="currentDisk" size="large" placeholder="Select"-->
+<!--                  style="width: 60px">-->
+<!--            <Option v-for="itemSelect in localDiskList" :value="itemSelect"-->
+<!--                    :key="itemSelect" @click.native="localDiskChange">{{ itemSelect }}</Option>-->
+<!--          </Select>-->
+<!--        </Col>-->
+<!--        <Col style="text-align: left;">-->
+<!--          <Breadcrumb separator=">" style="font-size: medium;">-->
+<!--            <BreadcrumbItem :key="index" :value="item" v-for="(item, index) in folderList">-->
+<!--              <span type="text" @click="clickFolder(item)">{{ item.folderName }}</span>-->
+<!--            </BreadcrumbItem>-->
+<!--          </Breadcrumb>-->
+<!--        </Col>-->
+<!--      </Row>-->
+<!--    </div>-->
     <div class="folder-breadcrumb">
-      <Breadcrumb separator=">" style="font-size: medium">
+      <Breadcrumb separator=">" style="font-size: medium;margin-top: 10px">
+        <Button small type="dashed" icon="md-refresh" @click="refreshDisk"></Button>
+        <span>&nbsp;&nbsp;</span>
         <BreadcrumbItem>
           <Select v-model="currentDisk" size="large" placeholder="Select"
-                  style="width: 60px"
-                  filterable=true @on-change="localDiskChange">
+                  style="width: 60px">
             <Option v-for="itemSelect in localDiskList" :value="itemSelect"
-                    :key="itemSelect">{{ itemSelect }}</Option>
+                    :key="itemSelect" @click.native="localDiskChange">{{ itemSelect }}</Option>
           </Select>
         </BreadcrumbItem>
         <BreadcrumbItem :key="index" :value="item" v-for="(item, index) in folderList">
-          <span type="text" @click="clickFolder">{{ item.folderName }}</span>
+          <span type="text" @click="clickFolder(item)">{{ item.folderName }}</span>
         </BreadcrumbItem>
       </Breadcrumb>
     </div>
     <div style="margin-bottom: 45px">
-      <Form ref="FilesForm" class="folder-files-form"
-            :model="folderForm"
-            :rules="folderFormRule"
-            :label-width="380">
-        <div style="margin: 10px 60px 20px 0;text-align: right">
-          <Button type="primary" icon="md-book" @click="selectFiles">Add</Button>
-        </div>
-        <Table
-          :columns="filesTableColumns"
-          :data="filesTableDataShow"
-          class="files-table"
-          style="margin: 0 20px 10px 20px"
-        ></Table>
-        <Page
-          :total="filesTableDataCount"
-          :page-size="filesTablePageSize"
-          @on-change="changeFilesTablePage"
-          @on-page-size-change="changeFilesTablePageSize"
-          show-total
-          show-sizer
-          show-elevator
-        ></Page>
-      </Form>
+      <div style="margin: 10px 60px 20px 0;text-align: right">
+        <Button type="primary" icon="md-add" @click="addFilesToConvey">Add</Button>
+<!--        <span>&nbsp;&nbsp;<Icon type="md-arrow-forward" />&nbsp;&nbsp;</span>-->
+<!--        <Button type="default" icon="md-book" to="/trans">Ready to Transfer</Button>-->
+      </div>
+      <Table
+        :columns="filesTableColumns" border
+        :data="filesTableDataShow" ref="selectFiles"
+        class="files-table" no-data-text="Please Select local disk first"
+        style="margin: 0 20px 10px 20px"
+      ></Table>
+      <div style="margin-top: 20px">
+        <span>Total {{ filesTableDataShow.length }} items</span>
+      </div>
+<!--      <Page-->
+<!--        :total="filesTableDataCount"-->
+<!--        :page-size="filesTablePageSize"-->
+<!--        @on-change="changeFilesTablePage"-->
+<!--        @on-page-size-change="changeFilesTablePageSize"-->
+<!--        show-total-->
+<!--        show-sizer-->
+<!--        show-elevator-->
+<!--      ></Page>-->
     </div>
     <div>
       <!--      <iframe src="" frameborder="0">Local file system.</iframe>-->

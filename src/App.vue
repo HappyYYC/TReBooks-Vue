@@ -10,17 +10,17 @@
               </router-link>
             </div>
           </Col>
-          <Col span="18">
+          <Col span="18" style="text-align: right">
             <Menu
               :active-name="$route.name"
               mode="horizontal"
               theme="dark"
               width="auto"
-              style="position: absolute; right: 200px; text-align: center;"
+              style="position: absolute; right: 200px;text-align: center;"
             >
-              <MenuItem name="Transmit" to="/trans">
+              <MenuItem name="Transfer" to="/trans">
                 <Icon type="md-send"/>
-                Transmit
+                Transfer
               </MenuItem>
               <MenuItem name="Folder" to="/folder">
                 <Icon type="ios-folder" />
@@ -36,19 +36,18 @@
       </Header>
     </div>
     <div class="content">
-      <router-view></router-view>
+      <keep-alive>
+        <Transfer v-if="$route.name === 'Transfer'" ref="transfer" :driverListProps="driversListProps"></Transfer>
+        <Folder_ v-if="$route.name === 'Folder'" ref="folder" :driverListProps="driversListProps" :dirListProps="dirListProps"></Folder_>
+        <Record v-if="$route.name === 'Record'" ref="record"></Record>
+        <HelloWorld v-if="$route.name === 'HelloWorld'"></HelloWorld>
+<!--        <router-view></router-view>-->
+      </keep-alive>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App',
-  data () {
-    return {
-    }
-  }
-}
+<script src="@/js/app.js">
 </script>
 
 <style>
