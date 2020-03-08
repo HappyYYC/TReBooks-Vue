@@ -73,29 +73,31 @@
         </p>
         <div>
           <Row>
-            <Card style="width:350px">
+            <Card>
               <p slot="title">
-                <Icon type="ios-film-outline"></Icon>
+                <Icon type="md-pricetags" />
                 Selected Categories
               </p>
               <a href="#" slot="extra" @click.prevent="selectedTagsList = []">
                 <Icon type="ios-loop-strong"></Icon>
                 Clear
               </a>
-              <ul>
-                <li :key="index" :value="item" v-for="(item, index) in selectedTagsList">
-                  <span>
-                    <Icon type="ios-star" />
-                    {{ item }}
-                  </span>
-                </li>
-              </ul>
+              <Tag v-for="(item, index) in selectedTagsList" :key="index" :value="item" type="dot" closable color="success" @on-close="clickTagClose(index)">{{ item }}</Tag>
             </Card>
           </Row>
           <Row>
-            <span :key="index" :value="item" v-for="(item, index) in tagsList" @click="addTag(index)">
-              <Icon />{{ item }}
-            </span>
+            <br />
+            <br />
+          </Row>
+          <Row>
+<!--            <span>-->
+<!--              <Icon type="ios-pricetags-outline" />-->
+<!--              {{ item }}-->
+<!--            </span>-->
+            <Button size="middle" type="default" v-for="(item, index) in tagsList" :key="index" :value="item" @click="addTag(index)">
+              <Icon type="ios-pricetags-outline" />
+              {{ item }}
+            </Button>
           </Row>
         </div>
       </Modal>
