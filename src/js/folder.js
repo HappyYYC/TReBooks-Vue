@@ -7,6 +7,7 @@ export default {
       webSocket: null,
       webSocketErrorCount: 0,
       addCategoriesDialog: false,
+      addCategoriesBatchDialog: false,
       folderList: [
         // {
         //   folderName: 'Kindle',
@@ -24,8 +25,8 @@ export default {
       localDiskList: ['C:', 'D:', 'E:', 'F:', 'G:', 'H:', 'I:', 'J:',
         'K:', 'L:', 'M:', 'N:', 'O:', 'P:', 'Q:', 'R:', 'S:', 'T:', 'U:',
         'V:', 'W:', 'X:', 'Y:', 'Z:', 'A:', 'B:'],
-      currentDisk: 'D:',
-      currentFolder: 'D:/',
+      currentDisk: '',
+      currentFolder: '',
       filesList: [],
       driversList: [],
       tagsList: [],
@@ -337,14 +338,23 @@ export default {
       this.addCategoriesDialog = true
       this.addCategoriesSelectedRow = index
     },
+    addCategoriesBatch () {
+      this.selectedList = this.$refs.selectFiles.getSelection()
+      if (this.selectedList.length === 0) {
+        this.$Message.info('Please select items of table first.')
+        return
+      }
+      this.addCategoriesBatchDialog = true
+    },
     clickTagClose (index) {
       this.selectedTagsList.splice(index, 1)
     },
     addCategoriesDialogOK () {
       if (this.selectedTagsList.length === 0) {
+        this.$Message.info('Please select categories first.')
+        this.addCategoriesDialog = true
         return
       }
-      this.selectedList = this.$refs.selectFiles.getSelection()
       let actions = {
         'CMD': 'mvFilesRequest',
         'CMDCode': 40,
@@ -352,50 +362,69 @@ export default {
       }
       let tempStr
       let newFileItemName
-      if (this.selectedList.length === 0) {
-        tempStr = this.transTableDataShow[this.addCategoriesSelectedRow]['itemName']
+      tempStr = this.filesTableDataShow[this.addCategoriesSelectedRow]['itemName']
+      if (/^\[#.*\]-/.test(tempStr)) {
+        newFileItemName = this.selectedTagsList[0] + '/['
+        for (let j in this.selectedTagsList) {
+          newFileItemName = newFileItemName + '#' + this.selectedTagsList[j]
+        }
+        newFileItemName = newFileItemName + ']-' + this.filesTableDataShow[this.addCategoriesSelectedRow]['itemName'].match(/^\[#.*\]-(.*)$/)[1]
+      } else {
+        newFileItemName = this.selectedTagsList[0] + '/['
+        for (let j in this.selectedTagsList) {
+          newFileItemName = newFileItemName + '#' + this.selectedTagsList[j]
+        }
+        newFileItemName = newFileItemName + ']-' + this.filesTableDataShow[this.addCategoriesSelectedRow]['itemName']
+      }
+      let tempFile = {
+        'prePath': this.currentFolder + this.filesTableDataShow[this.addCategoriesSelectedRow]['itemName'],
+        'newPath': this.currentFolder + newFileItemName
+      }
+      actions['mvFilesList'].push(tempFile)
+      this.$parent.webSocketSend(JSON.stringify(actions))
+      this.queryFolderFiles(this.currentFolder)
+    },
+    addCategoriesBatchDialogOK () {
+      if (this.selectedTagsList.length === 0) {
+        this.$Message.info('Please select categories first.')
+        this.addCategoriesDialog = true
+        return
+      }
+      this.selectedList = this.$refs.selectFiles.getSelection()
+      // if (this.selectedList.length === 0) {
+      //   this.$Message.info('Please select items of table first.')
+      //   return
+      // }
+      let actions = {
+        'CMD': 'mvFilesRequest',
+        'CMDCode': 40,
+        'mvFilesList': []
+      }
+      let tempStr
+      let newFileItemName
+      for (let i in this.selectedList) {
+        tempStr = this.selectedList[i]['itemName']
         if (/^\[#.*\]-/.test(tempStr)) {
           newFileItemName = this.selectedTagsList[0] + '/['
           for (let j in this.selectedTagsList) {
             newFileItemName = newFileItemName + '#' + this.selectedTagsList[j]
           }
-          newFileItemName = newFileItemName + ']-' + this.transTableDataShow[this.addCategoriesSelectedRow]['itemName'].match(/^\[#.*\]-(.*)$/)[1]
+          newFileItemName = newFileItemName + ']-' + this.selectedList[i]['itemName'].match(/^\[#.*\]-(.*)$/)[1]
         } else {
           newFileItemName = this.selectedTagsList[0] + '/['
           for (let j in this.selectedTagsList) {
             newFileItemName = newFileItemName + '#' + this.selectedTagsList[j]
           }
-          newFileItemName = newFileItemName + ']-' + this.transTableDataShow[this.addCategoriesSelectedRow]['itemName']
+          newFileItemName = newFileItemName + ']-' + this.selectedList[i]['itemName']
         }
         let tempFile = {
-          'prePath': this.currentFolder + this.transTableDataShow[this.addCategoriesSelectedRow]['itemName'],
+          'prePath': this.currentFolder + this.selectedList[i]['itemName'],
           'newPath': this.currentFolder + newFileItemName
         }
         actions['mvFilesList'].push(tempFile)
-      } else {
-        for (let i in this.selectedList) {
-          tempStr = this.selectedList[i]['itemName']
-          if (/^\[#.*\]-/.test(tempStr)) {
-            newFileItemName = this.selectedTagsList[0] + '/['
-            for (let j in this.selectedTagsList) {
-              newFileItemName = newFileItemName + '#' + this.selectedTagsList[j]
-            }
-            newFileItemName = newFileItemName + ']-' + this.selectedList[i]['itemName'].match(/^\[#.*\]-(.*)$/)[1]
-          } else {
-            newFileItemName = this.selectedTagsList[0] + '/['
-            for (let j in this.selectedTagsList) {
-              newFileItemName = newFileItemName + '#' + this.selectedTagsList[j]
-            }
-            newFileItemName = newFileItemName + ']-' + this.selectedList[i]['itemName']
-          }
-          let tempFile = {
-            'prePath': this.currentFolder + this.selectedList[i]['itemName'],
-            'newPath': this.currentFolder + newFileItemName
-          }
-          actions['mvFilesList'].push(tempFile)
-        }
       }
       this.$parent.webSocketSend(JSON.stringify(actions))
+      this.queryFolderFiles(this.currentFolder)
     },
     currentFolderChange (data) {
       this.folderList = []
@@ -479,23 +508,7 @@ export default {
     // },
     handleListDirResponse (jsonData) {
       this.currentFolder = jsonData['folderPath'].replace(/\*$/, '')
-      // this.currentFolderChange(this.currentFolder)
-      // ---------------currentFolderChange (data) {}---------
-      this.folderList = []
-      let tempFolderList = this.currentFolder.split('/')
-      let tempFolderStr = tempFolderList[0] + '/'
-      this.currentDisk = tempFolderList[0]
-      for (let i in tempFolderList) {
-        if (parseInt(i) === 0 || tempFolderList[i] === '') {
-          continue
-        }
-        tempFolderStr = tempFolderStr + tempFolderList[i] + '/'
-        this.folderList.push({
-          folderName: tempFolderList[i],
-          folderPath: tempFolderStr
-        })
-      }
-      // ---------------currentFolderChange (data) {}---------
+      this.currentFolderChange(this.currentFolder)
       this.filesTableData = []
       this.filesList = JSON.parse(JSON.stringify(jsonData['foldersData']))
       let tempStr

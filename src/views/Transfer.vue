@@ -8,7 +8,9 @@
           <Option v-for="item in localDiskList" :value="item" :key="item">{{ item }}</Option>
         </Select>
         <span>&nbsp;&nbsp;</span>
-        <Button small type="dashed" icon="md-refresh" @click="refreshDisk"></Button>
+        <Tooltip content="Refresh local Disks" placement="bottom">
+          <Button small type="dashed" icon="md-refresh" @click="refreshDisk"></Button>
+        </Tooltip>
 
         <!--        <span style="font-size: larger">&nbsp;&nbsp;&nbsp;&nbsp;-->
 <!--          <Icon type="md-arrow-round-forward" />&nbsp;&nbsp;&nbsp;&nbsp;-->
