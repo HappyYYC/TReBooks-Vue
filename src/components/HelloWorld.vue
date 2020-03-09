@@ -14,22 +14,10 @@ export default {
   data () {
     return {
       msg: 'Welcome to TReBooks Web App'
-      // webSocket: null,
-      // webSocketErrorCount: 0
     }
   },
   methods: {
     readyDefaultPage () {
-      // let actions = {
-      //   'CMD': 'listDriverRequest',
-      //   'CMDCode': 20
-      // }
-      // this.$parent.webSocketSend(JSON.stringify(actions))
-      // actions = {
-      //   'CMD': 'listDefaultFolderRequest',
-      //   'CMDCode': 30
-      // }
-      // this.$parent.webSocketSend(JSON.stringify(actions))
     }
   }
 }

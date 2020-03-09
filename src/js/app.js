@@ -1,7 +1,3 @@
-// import Transfer from '@/views/Transfer'
-// import Folder_ from '@/views/Folder'
-// import Record from '@/views/Record'
-// import HelloWorld from '@/components/HelloWorld'
 const Transfer = () => import('@/views/Transfer')
 const Folder_ = () => import('@/views/Folder')
 const Record = () => import('@/views/Record')
@@ -58,22 +54,17 @@ export default {
       }
     },
     webSocketOnMessage (e) {
-      // console.log(e.data)
       try {
-        // var jsonMessage = JSON.parse(JSON.stringify(e.data))
         let jsonMessage = JSON.parse(e.data)
-        // console.log('/app jsonMessage', jsonMessage)
         this.cmdData(jsonMessage)
       } catch (e) {
         console.log(e)
       }
     },
     webSocketSend (data) {
-      // console.log('webSocketSend', data)
       this.webSocket.send(data)
     },
     webSocketClose (e) {
-      // console.log('websocket close: ' + e.code + ' ' + e.reason + ' ' + e.wasClean)
       console.log('/app closing connection', e)
     },
     refreshDriver () {
@@ -98,26 +89,16 @@ export default {
       this.webSocketSend(JSON.stringify(actions))
     },
     cmdData (jsonData) {
-      // console.log('this.$refs', this.$refs)
       if (jsonData['CMD'] === 'listDirResponse') {
-        // this.$refs.folder.handleListDirResponse(jsonData)
-        // console.log('/app listDirResponse', jsonData)
         this.dirListProps = jsonData
       } else if (jsonData['CMD'] === 'listDriverResponse') {
-        // this.$refs.folder.handleListDriverResponse(jsonData)
-        // this.$refs.transfer.handleListDriverResponse(jsonData)
-        // console.log('/app listDriverResponse', jsonData)
         this.driversListProps = jsonData
       } else if (jsonData['CMD'] === 'listTagsResponse') {
-        // this.$refs.folder.handleListDriverResponse(jsonData)
-        // this.$refs.transfer.handleListDriverResponse(jsonData)
-        // console.log('/app listDriverResponse', jsonData)
         this.tagsListProps = jsonData
       }
     }
   },
   mounted () {
-    // console.log('mounted this.$refs', this.$refs)
     console.log('/app mounted')
   },
   created () {

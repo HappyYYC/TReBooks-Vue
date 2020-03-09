@@ -11,11 +11,6 @@
         <Tooltip content="Refresh local Disks" placement="bottom">
           <Button small type="dashed" icon="md-refresh" @click="refreshDisk"></Button>
         </Tooltip>
-
-        <!--        <span style="font-size: larger">&nbsp;&nbsp;&nbsp;&nbsp;-->
-<!--          <Icon type="md-arrow-round-forward" />&nbsp;&nbsp;&nbsp;&nbsp;-->
-<!--          Device name: , Free space: .-->
-<!--        </span>-->
       </div>
       <div style="margin: 5px 0 5px 0">
         <Button type="default" icon="md-folder" to="/folder">Select Files</Button>
@@ -32,16 +27,6 @@
       <div style="margin-top: 20px">
         <span>Total {{ transTableDataShow.length }} items</span>
       </div>
-<!--      <Page-->
-<!--        :total="transTableDataCount"-->
-<!--        :page-size="transTablePageSize"-->
-<!--        :page-size-opts="transTablePageSizeList"-->
-<!--        @on-change="changeTransTablePage"-->
-<!--        @on-page-size-change="changeTransTablePageSize"-->
-<!--        show-total-->
-<!--        show-sizer-->
-<!--        show-elevator-->
-<!--      ></Page>-->
     </div>
   </div>
 </template>
