@@ -37,7 +37,7 @@
     </div>
     <div class="content">
       <keep-alive>
-        <Transfer v-if="$route.name === 'Transfer'" ref="transfer" :driverListProps="driversListProps"></Transfer>
+        <Transfer v-if="$route.name === 'Transfer'" ref="transfer" :driverListProps="driversListProps" :cpFilesResProps="cpFilesResProps"></Transfer>
         <Folder_ v-if="$route.name === 'Folder'" ref="folder" :driverListProps="driversListProps" :dirListProps="dirListProps" :tagsListProps="tagsListProps"></Folder_>
         <Record v-if="$route.name === 'Record'" ref="record"></Record>
         <HelloWorld v-if="$route.name === 'HelloWorld'"></HelloWorld>

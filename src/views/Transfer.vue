@@ -19,7 +19,7 @@
         <Button type="primary" icon="md-book" @click="conveySelectedFiles">Convey</Button>
       </div>
       <Table
-        :columns="transTableColumns" border
+        :columns="transTableColumns" border :loading="transTableLoading"
         :data="transTableDataShow" ref="selectFiles"
         class="files-table" no-data-text="Please Select Files first"
         style="margin: 0 20px 10px 20px"

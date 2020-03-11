@@ -143,7 +143,8 @@ export default {
       transTablePageSizeList: [6, 12, 18, 50],
       transTablePageCurrent: 1,
       transTableDataCount: 0,
-      selectedList: []
+      selectedList: [],
+      transTableLoading: false
     }
   },
   methods: {
@@ -184,13 +185,9 @@ export default {
           'destPath': this.kindleVolume + '/documents/' + tempStr + '/' + this.selectedList[i]['itemName']
         }
         actions['cpFilesList'].push(tempFile)
-        for (let j in this.transTableDataShow) {
-          if (this.selectedList[i]['location'] === this.transTableDataShow[j]['location']) {
-            this.transTableDataShow.splice(j, 1)
-          }
-        }
       }
       this.$parent.webSocketSend(JSON.stringify(actions))
+      this.transTableLoading = true
     },
     handleListDriverResponse (jsonData) {
       this.driversList = JSON.parse(JSON.stringify(jsonData['driversList']))
@@ -208,6 +205,22 @@ export default {
           this.kindleVolume = tempDriver['driverLetter'].replace('\\', '')
         }
       }
+    },
+    handleCpFilesResponse (status) {
+      if (status) {
+        this.selectedList = this.$refs.selectFiles.getSelection()
+        for (let i in this.selectedList) {
+          for (let j in this.transTableDataShow) {
+            if (this.selectedList[i]['location'] === this.transTableDataShow[j]['location']) {
+              this.transTableDataShow.splice(j, 1)
+            }
+          }
+        }
+        this.transTableLoading = false
+      } else {
+        this.transTableLoading = false
+        this.$Message.error('Convey error. Please try again.')
+      }
     }
   },
   activated () {
@@ -217,7 +230,7 @@ export default {
       let tempAddedFiles = JSON.parse(addedFiles)
       for (let j in tempAddedFiles) {
         for (let k in this.transTableData) {
-          if (this.transTableData[k]['location'] === tempAddedFiles[j]['location']) {
+          if (this.transTableData[k]['location'] === tempAddedFiles[j]['location'] && this.transTableData[k]['itemName'] === tempAddedFiles[j]['itemName']) {
             multiFlag = true
             break
           }
@@ -233,7 +246,7 @@ export default {
       this.transTableDataShow = this.transTableData
     }
   },
-  props: ['driversListProps'],
+  props: ['driversListProps', 'cpFilesResProps'],
   watch: {
     driversListProps: {
       handler (newVal, oldVal) {
@@ -242,6 +255,13 @@ export default {
         })
       },
       deep: true
+    },
+    cpFilesResProps: {
+      handler (newVal, oldVal) {
+        this.$nextTick(() => {
+          this.handleCpFilesResponse(newVal)
+        })
+      }
     }
   },
   mounted () {

@@ -10,7 +10,8 @@ export default {
       webSocketErrorCount: 0,
       driversListProps: null,
       dirListProps: null,
-      tagsListProps: null
+      tagsListProps: null,
+      cpFilesResProps: null
     }
   },
   components: {
@@ -29,7 +30,7 @@ export default {
       this.webSocket.onmessage = this.webSocketOnMessage
     },
     webSocketOnOpen () {
-      console.log('/app webSocketOnOpen')
+      // console.log('/app webSocketOnOpen')
       let actions = {
         'CMD': 'listDriverRequest',
         'CMDCode': 20
@@ -95,12 +96,19 @@ export default {
         this.driversListProps = jsonData
       } else if (jsonData['CMD'] === 'listTagsResponse') {
         this.tagsListProps = jsonData
+      } else if (jsonData['CMD'] === 'cpFilesResponse') {
+        if (jsonData['status'] === 'OK') {
+          // console.log(jsonData)
+          this.cpFilesResProps = true
+        } else {
+          this.cpFilesResProps = false
+        }
       }
     }
   },
-  mounted () {
-    console.log('/app mounted')
-  },
+  // mounted () {
+  //   // console.log('/app mounted')
+  // },
   created () {
     this.initWebSocket()
   },
