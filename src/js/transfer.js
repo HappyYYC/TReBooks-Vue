@@ -180,8 +180,8 @@ export default {
       for (let i in this.selectedList) {
         tempStr = this.selectedList[i]['category'].match(/^#([^#]+)#?/)[1]
         let tempFile = {
-          'srcPath': this.selectedList[i]['location'],
-          'destPath': this.kindleVolume + '/document/' + tempStr + '/' + this.selectedList[i]['itemName']
+          'srcPath': this.selectedList[i]['location'] + this.selectedList[i]['itemName'],
+          'destPath': this.kindleVolume + '/documents/' + tempStr + '/' + this.selectedList[i]['itemName']
         }
         actions['cpFilesList'].push(tempFile)
         for (let j in this.transTableDataShow) {

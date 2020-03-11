@@ -336,6 +336,11 @@ export default {
           } else {
             tempFileData['category'] = '#Unknown'
           }
+          if (/.*\..*$/.test(tempStr)) {
+            tempFileData['fileType'] = tempStr.match(/.*\.(.*)$/)[1]
+          } else {
+            tempFileData['fileType'] = '-'
+          }
         } else {
           tempFileData['fileType'] = '-'
           tempFileData['fileSize'] = '-'
