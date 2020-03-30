@@ -11,6 +11,9 @@
         <Tooltip content="Refresh local Disks" placement="bottom">
           <Button small type="dashed" icon="md-refresh" @click="refreshDisk"></Button>
         </Tooltip>
+        <Tooltip content="Reset local Disks" placement="bottom">
+          <Button small type="dashed" icon="ios-hand-outline" @click="resetLocalDisk"></Button>
+        </Tooltip>
       </div>
       <div style="margin: 5px 0 5px 0">
         <Button type="default" icon="md-folder" to="/folder">Select Files</Button>

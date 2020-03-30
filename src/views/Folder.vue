@@ -3,6 +3,9 @@
     <h1></h1>
     <div class="folder-breadcrumb">
       <Breadcrumb separator=">" style="font-size: medium;margin-top: 10px">
+        <Tooltip content="Reset local Disks" placement="bottom">
+          <Button small type="dashed" icon="ios-hand-outline" @click="resetLocalDisk"></Button>
+        </Tooltip>
         <Tooltip content="Refresh local Disks" placement="bottom">
           <Button small type="dashed" icon="md-refresh" @click="refreshDisk"></Button>
         </Tooltip>

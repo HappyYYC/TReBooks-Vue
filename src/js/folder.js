@@ -3,12 +3,15 @@ export default {
   name: 'Folder',
   data () {
     return {
-      webSocket: null,
-      webSocketErrorCount: 0,
+      // webSocket: null,
+      // webSocketErrorCount: 0,
       addCategoriesDialog: false,
       addCategoriesBatchDialog: false,
       folderList: [],
       localDiskList: ['C:', 'D:', 'E:', 'F:', 'G:', 'H:', 'I:', 'J:',
+        'K:', 'L:', 'M:', 'N:', 'O:', 'P:', 'Q:', 'R:', 'S:', 'T:', 'U:',
+        'V:', 'W:', 'X:', 'Y:', 'Z:', 'A:', 'B:'],
+      resetLocalDiskList: ['C:', 'D:', 'E:', 'F:', 'G:', 'H:', 'I:', 'J:',
         'K:', 'L:', 'M:', 'N:', 'O:', 'P:', 'Q:', 'R:', 'S:', 'T:', 'U:',
         'V:', 'W:', 'X:', 'Y:', 'Z:', 'A:', 'B:'],
       currentDisk: '',
@@ -172,6 +175,9 @@ export default {
         }
         this.$parent.webSocketSend(JSON.stringify(actions))
       }
+    },
+    resetLocalDisk () {
+      this.localDiskList = this.resetLocalDiskList
     },
     addTag (index) {
       if (this.selectedTagsList.indexOf(this.tagsList[index]) === -1) {

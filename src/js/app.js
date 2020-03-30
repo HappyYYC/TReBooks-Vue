@@ -67,6 +67,13 @@ export default {
     },
     webSocketClose (e) {
       console.log('/app closing connection', e)
+      if (this.webSocketErrorCount >= 10) {
+        this.$Notice.error({
+          title: 'WebSocket Closed',
+          desc: 'Please go to the homepage and refresh OR close this page and restart TReBooks.exe.',
+          duration: 0
+        })
+      }
     },
     refreshDriver () {
       let actions = {

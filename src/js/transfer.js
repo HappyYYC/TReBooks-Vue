@@ -3,10 +3,13 @@ export default {
   name: 'Transfer',
   data () {
     return {
-      webSocket: null,
-      webSocketErrorCount: 0,
+      // webSocket: null,
+      // webSocketErrorCount: 0,
       isGetDriversInfo: false,
       localDiskList: ['D:', 'E:', 'F:', 'G:', 'H:', 'I:', 'J:',
+        'K:', 'L:', 'M:', 'N:', 'O:', 'P:', 'Q:', 'R:', 'S:', 'T:', 'U:',
+        'V:', 'W:', 'X:', 'Y:', 'Z:', 'A:', 'B:', 'C:'],
+      resetLocalDiskList: ['D:', 'E:', 'F:', 'G:', 'H:', 'I:', 'J:',
         'K:', 'L:', 'M:', 'N:', 'O:', 'P:', 'Q:', 'R:', 'S:', 'T:', 'U:',
         'V:', 'W:', 'X:', 'Y:', 'Z:', 'A:', 'B:', 'C:'],
       kindleVolume: 'H:',
@@ -162,6 +165,9 @@ export default {
         this.$parent.webSocketSend(JSON.stringify(actions))
       }
     },
+    resetLocalDisk () {
+      this.localDiskList = this.resetLocalDiskList
+    },
     conveySelectedFiles () {
       this.selectedList = this.$refs.selectFiles.getSelection()
       if (this.selectedList.length === 0) {
@@ -250,17 +256,13 @@ export default {
   watch: {
     driversListProps: {
       handler (newVal, oldVal) {
-        this.$nextTick(() => {
-          this.handleListDriverResponse(newVal)
-        })
+        this.handleListDriverResponse(newVal)
       },
       deep: true
     },
     cpFilesResProps: {
       handler (newVal, oldVal) {
-        this.$nextTick(() => {
-          this.handleCpFilesResponse(newVal)
-        })
+        this.handleCpFilesResponse(newVal)
       }
     }
   },
